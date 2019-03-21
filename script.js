@@ -1,5 +1,9 @@
-/* Variables from DOM elements */
+/* Constants */
+const ROCK = "rock";
+const PAPER = "paper";
+const SCISSORS = "scissors";
 
+/* Variables from DOM elements */
 let userScore = 0;
 let computerScore = 0;
 let userScore_span = document.getElementById("user-score");
@@ -13,11 +17,12 @@ const scissors_div = document.getElementById("s");
 /* Game Mechanics */
 
 function computerGuess() {          /* Computer guesses either r, p, or s from an array */
-    var computerChoices = ["r", "p", "s"];
-    var randomNumber = Math.floor(Math.random() * 3);
+    const computerChoices = [ROCK, PAPER];
+    const randomNumber = Math.floor(Math.random() * 3);
     return computerChoices[randomNumber];
 }
 
+// Probably don't need this with the constants in place
 function convertChoice(letter) {       /* Converts letter taken from array to a string choice */
     if (letter === "r") {
         return "Rock";
@@ -28,15 +33,21 @@ function convertChoice(letter) {       /* Converts letter taken from array to a 
 }
 
 function userWin(userChoice, computerChoice) {  /* If user wins */
+    // String.fontsize is deprecated. Try making a CSS class and add it dynamically using HTMLElement.classList
     const smallUserword = "user".fontsize(3).sub();      /* subscripts to identify who picked what */
     const smallCompword = "comp".fontsize(3).sub();
+    
     const userChoice_div = document.getElementById(userChoice);
     userScore++;
     userScore_span.innerHTML = userScore;
     computerScore_span.innerHTML = computerScore;
+    
+    // You could use a template literal here
+    // `${convertChoice(userChoice) smallUserword} beats ${convertChoice(userChoice) smallCompword}. You win!`
     result_p.innerHTML = convertChoice(userChoice) + smallUserword + " beats " + convertChoice(computerChoice) + smallCompword + ". You win!"; /* Text that is displayed after picking something */
     userChoice_div.classList.add("green-glow");  /* classList.add() allows you to add HTML styled class onto an element - green glow for win */
-    setTimeout(function() {
+    
+    setTimeout(() => {
         userChoice_div.classList.remove("green-glow") 
     }, 300);     /* removes green glow for winning after 300ms */
 }
@@ -56,19 +67,23 @@ function userLose(userChoice, computerChoice) {     /* If user loses */
 }
 
 function userDraw(userChoice, computerChoice) {      /* If user draws */
+    // Same as above
     const smallUserword = "user".fontsize(3).sub();      /* subscripts to identify who picked what */
     const smallCompword = "comp".fontsize(3).sub();
+    
     const userChoice_div = document.getElementById(userChoice);
+    
+    // Same as above
     result_p.innerHTML = convertChoice(userChoice) + smallUserword + " is the same as " + convertChoice(computerChoice) + smallCompword + ". Draw!"; /* Text that is displayed after picking something */
     userChoice_div.classList.add("gray-glow");  /* classList.add() allows you to add HTML styled class onto an element - gray glow for draw*/
-    setTimeout(function() {
+    setTimeout(() => {
         userChoice_div.classList.remove("gray-glow") 
     }, 300);    /* removes gray glow for drawing after 300ms */
 }
 
 function game(userChoice) {    /* Goes through all scenarios of the game */
-    var computerChoice = computerGuess();
-    var name = "pine";
+    const computerChoice = computerGuess();
+    const name = "pine";
     switch (userChoice + computerChoice) {      
         case "rs":
         case "pr":
@@ -89,17 +104,22 @@ function game(userChoice) {    /* Goes through all scenarios of the game */
 }
 
 function main() {
-    rock_div.addEventListener("click", function() {   /* rock button */
-    game("r");
-    });
-
-    paper_div.addEventListener("click", function() {    /* paper button */
-    game("p");
-    });
-
-    scissors_div.addEventListener("click", function() {     /* scissors button */
-    game("s");
-    });
+    // Google "event delegation" 
+    // You don't have to add individual listeners to every div
+    // On a side note, these should probably be <button> elements rather than <div>
+    document.addEventListener('click', (event) => {
+        switch(event.target) {
+            case rock_div:
+                game('r')
+                break
+            case paper_div:
+                game('p')
+                break
+            case scissors_div:
+                game('s')
+                break
+        }
+    }
 }
+                              
 main();
-
