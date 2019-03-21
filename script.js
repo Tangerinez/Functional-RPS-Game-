@@ -1,3 +1,11 @@
+// So this isn't an issue for a small pet project like this
+// But all these variables below are in the global scope
+// Which means variables like userScore and computerScore are
+// Actually window.userScore and window.computerScore
+// You could use a namespace like keeping everything under
+// RockPaperScissors.VARIABLE
+// But in real life you wouldn't do this anyway so it's ok.
+
 /* Constants */
 const ROCK = "rock";
 const PAPER = "paper";
